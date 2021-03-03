@@ -23,13 +23,16 @@ mongoose.connect(config.mongoURI, {
 
 app.get('/', (req, res) => res.send('hi'));
 
+app.get('/api/hello', (req, res) => {
+    res.send("안녕하세요")
+})
 
 app.post('/api/user/register', (req, res) => {
     //회원 가입할때 필요한 정보들을 client에서 가져오면 그것들을 DB에 저장
     const user = new User(req.body)
 
     user.save((err, userInfo) => {
-        if (err) return res.json({ success: false, err})
+        if (err) return res.json({ success: false, err })
         return res.status(200).json({
             success: true
         })
@@ -69,7 +72,7 @@ app.post('/api/user/login', (req, res) => {
 app.get('/api/user/auth', auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
-        isAdmin: req.user.role ===0 ? false : true,
+        isAdmin: req.user.role === 0 ? false : true,
         isAuth: true,
         email: req.user.email,
         name: req.user.name,
@@ -80,16 +83,16 @@ app.get('/api/user/auth', auth, (req, res) => {
 })
 
 
-app.get('/api/user/logout', auth,(req, res) => {
+app.get('/api/user/logout', auth, (req, res) => {
 
-    User.findOneAndUpdate({_id: req.user._id},
-    { token: ""}
-    , (err, user) => {
-        if(err) return res.json({success: false, err});
-        return res.status(200).send({
-            success: true
+    User.findOneAndUpdate({ _id: req.user._id },
+        { token: "" }
+        , (err, user) => {
+            if (err) return res.json({ success: false, err });
+            return res.status(200).send({
+                success: true
+            })
         })
-    })
 })
 
 
